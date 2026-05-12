@@ -1,0 +1,88 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *, *::before, *::after {
+    @apply box-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-1.5 h-1.5;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+@layer components {
+  /* TipTap editor */
+  .tiptap-editor {
+    @apply min-h-[140px] p-3 text-sm focus:outline-none;
+  }
+
+  .tiptap-editor p.is-editor-empty:first-child::before {
+    @apply text-gray-400 pointer-events-none float-left h-0;
+    content: attr(data-placeholder);
+  }
+
+  .tiptap-editor p { @apply mb-2; }
+  .tiptap-editor strong { @apply font-semibold; }
+  .tiptap-editor em { @apply italic; }
+  .tiptap-editor ul { @apply list-disc pl-5 mb-2; }
+  .tiptap-editor ol { @apply list-decimal pl-5 mb-2; }
+  .tiptap-editor a { @apply text-indigo-600 underline; }
+
+  /* Activity timeline */
+  .timeline-item {
+    @apply relative pl-8 pb-6;
+  }
+
+  .timeline-item::before {
+    content: '';
+    @apply absolute left-3 top-5 bottom-0 w-px bg-gray-200;
+  }
+
+  .timeline-item:last-child::before {
+    @apply hidden;
+  }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-in-out;
+  }
+
+  .animate-slide-in {
+    animation: slideIn 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+}
