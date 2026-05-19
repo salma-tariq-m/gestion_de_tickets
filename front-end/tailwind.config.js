@@ -4,6 +4,7 @@ export default {
     './index.html',
     './src/**/*.{js,ts,jsx,tsx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -28,6 +29,8 @@ export default {
         'fade-in': 'fadeIn 0.2s ease-in-out',
         'slide-in': 'slideIn 0.2s ease-out',
         'spin-slow': 'spin 2s linear infinite',
+        'float': 'float 6s ease-in-out infinite',
+        'pulse-slow': 'pulse 3s cubic-bezier(0.4,0,0.6,1) infinite',
       },
       keyframes: {
         fadeIn: {
@@ -38,6 +41,13 @@ export default {
           '0%': { opacity: '0', transform: 'translateX(-8px)' },
           '100%': { opacity: '1', transform: 'translateX(0)' },
         },
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+      },
+      backdropBlur: {
+        xs: '2px',
       },
     },
   },

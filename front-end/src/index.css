@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,9 +14,15 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 font-sans antialiased;
+    @apply bg-gray-50 text-gray-900 font-sans antialiased transition-colors duration-200;
   }
 
+  /* ── Dark Mode base ───────────────────────────── */
+  .dark body {
+    @apply bg-gray-950 text-gray-100;
+  }
+
+  /* ── Scrollbar ────────────────────────────────── */
   ::-webkit-scrollbar {
     @apply w-1.5 h-1.5;
   }
@@ -32,10 +38,18 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-400;
   }
+
+  .dark ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700;
+  }
+
+  .dark ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
 }
 
 @layer components {
-  /* TipTap editor */
+  /* ── TipTap editor ────────────────────────────── */
   .tiptap-editor {
     @apply min-h-[140px] p-3 text-sm focus:outline-none;
   }
@@ -52,7 +66,7 @@
   .tiptap-editor ol { @apply list-decimal pl-5 mb-2; }
   .tiptap-editor a { @apply text-indigo-600 underline; }
 
-  /* Activity timeline */
+  /* ── Activity timeline ────────────────────────── */
   .timeline-item {
     @apply relative pl-8 pb-6;
   }
@@ -62,8 +76,41 @@
     @apply absolute left-3 top-5 bottom-0 w-px bg-gray-200;
   }
 
+  .dark .timeline-item::before {
+    @apply bg-gray-700;
+  }
+
   .timeline-item:last-child::before {
     @apply hidden;
+  }
+
+  /* ── Glassmorphism card ───────────────────────── */
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-md border border-white/50 shadow-xl;
+  }
+
+  .dark .glass-card {
+    @apply bg-gray-900/80 backdrop-blur-md border-gray-700/50;
+  }
+
+  /* ── Gradient text ────────────────────────────── */
+  .gradient-text {
+    @apply bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent;
+  }
+
+  /* ── Auth gradient background ─────────────────── */
+  .auth-bg {
+    background: radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(236, 72, 153, 0.08) 0%, transparent 50%),
+                linear-gradient(135deg, #f8faff 0%, #f0f4ff 50%, #fdf4ff 100%);
+  }
+
+  .dark .auth-bg {
+    background: radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(236, 72, 153, 0.1) 0%, transparent 50%),
+                linear-gradient(135deg, #0f0f23 0%, #111827 50%, #1a0f2e 100%);
   }
 }
 
