@@ -1,18 +1,20 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import { Sidebar } from './Sidebar';
-import { Header } from './Header';
-import { useDarkMode } from '../../hooks/useDarkMode';
-import { ROUTES } from '../../utils/constants';
+import Sidebar from './Sidebar';
+import Navbar from './Navbar';
+import NotifPanel from './NotifPanel';
 
-/** Map routes → titres de page */
+/** Map des routes vers les titres des pages en français */
 const PAGE_TITLES = {
-  [ROUTES.DASHBOARD]: 'Tableau de bord',
-  [ROUTES.TICKETS]: 'Tickets',
-  [ROUTES.TICKET_NEW]: 'Nouveau ticket',
-  [ROUTES.ADMIN_USERS]: 'Utilisateurs',
-  [ROUTES.ADMIN_CATEGORIES]: 'Catégories',
-  [ROUTES.ADMIN_SETTINGS]: 'Paramètres système',
+  '/dashboard': 'Tableau de bord',
+  '/tickets': 'Mes tickets',
+  '/tickets/new': 'Créer un ticket',
+  '/admin/users': 'Console Utilisateurs',
+  '/admin/categories': 'Gestion Catégories',
+  '/settings': 'Paramètres',
+  '/teams': 'Équipes support',
+  '/kb': 'Base de Connaissances (KB)',
+  '/reports': 'Rapports & Statistiques',
 };
 
 function resolveTitle(pathname) {
@@ -22,28 +24,36 @@ function resolveTitle(pathname) {
 }
 
 /**
- * Layout principal avec sidebar + header + contenu.
- * Gère également le toggle dark/light mode.
+ * Layout principal avec Sidebar fixe, Navbar supérieure et panneau de notifications coulissant.
  */
 export function AppLayout() {
-  const [collapsed, setCollapsed] = useState(false);
   const { pathname } = useLocation();
-  const { isDark, toggle: toggleDark } = useDarkMode();
+  const [notifsOpen, setNotifsOpen] = useState(false);
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
-      <Sidebar collapsed={collapsed} onToggle={() => setCollapsed((v) => !v)} />
+    <div className="tf-app-container">
+      {/* Barre de navigation latérale fixe 240px */}
+      <Sidebar />
 
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <Header
+      {/* Zone de contenu principal décalée de 240px */}
+      <div className="tf-main-content">
+        <Navbar
           title={resolveTitle(pathname)}
-          isDark={isDark}
-          onToggleDark={toggleDark}
+          onToggleNotifs={() => setNotifsOpen(!notifsOpen)}
+          notifsOpen={notifsOpen}
         />
-        <main className="flex-1 overflow-y-auto p-6 bg-gray-50 dark:bg-gray-950 transition-colors duration-200">
+        
+        {/* Contenu principal de la page */}
+        <div style={{ padding: 'var(--spacing-lg) 0' }}>
           <Outlet />
-        </main>
+        </div>
       </div>
+
+      {/* Panneau de notifications latéral droit */}
+      <NotifPanel
+        isOpen={notifsOpen}
+        onClose={() => setNotifsOpen(false)}
+      />
     </div>
   );
 }

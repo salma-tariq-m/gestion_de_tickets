@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
-import { X } from 'lucide-react';
+import { IconX } from '@tabler/icons-react';
 import { cn } from '../../utils/cn';
 
 const sizeClasses = {
@@ -11,14 +11,15 @@ const sizeClasses = {
 };
 
 /**
- * Modal accessible avec fermeture par Echap et clic hors du contenu.
- * @param {{ isOpen: boolean, onClose: () => void, title?: string, size?: string, children: React.ReactNode }} props
+ * Modal accessible conforme à la charte graphique TicketFlow
  */
 export function Modal({ isOpen, onClose, title, size = 'md', children, className }) {
   const overlayRef = useRef(null);
 
   useEffect(() => {
-    const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
+    const handleKey = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
     if (isOpen) {
       document.addEventListener('keydown', handleKey);
       document.body.style.overflow = 'hidden';
@@ -34,34 +35,60 @@ export function Modal({ isOpen, onClose, title, size = 'md', children, className
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm animate-fade-in"
-      onClick={(e) => { if (e.target === overlayRef.current) onClose(); }}
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black-50 animate-fade-in"
+      style={{
+        backgroundColor: 'rgba(4, 44, 83, 0.4)', // Sombre transparent
+        backdropFilter: 'blur(4px)',
+      }}
+      onClick={(e) => {
+        if (e.target === overlayRef.current) onClose();
+      }}
     >
       <div
         role="dialog"
         aria-modal="true"
         aria-labelledby={title ? 'modal-title' : undefined}
         className={cn(
-          'relative w-full bg-white rounded-xl shadow-2xl flex flex-col max-h-[90vh]',
+          'relative w-full bg-white flex flex-col max-h-[90vh]',
           sizeClasses[size],
           className
         )}
+        style={{
+          borderRadius: 'var(--radius-lg)',
+          border: '1px solid var(--border)',
+          boxShadow: '0 10px 25px rgba(12, 68, 124, 0.1)',
+        }}
       >
         {/* Header */}
-        {title && (
-          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
-            <h2 id="modal-title" className="text-lg font-semibold text-gray-900">
+        <div
+          className="flex items-center justify-between px-6 py-4 shrink-0"
+          style={{ borderBottom: '1px solid var(--border)' }}
+        >
+          {title ? (
+            <h2 id="modal-title" className="m-0" style={{ fontSize: '18px', fontWeight: 500, color: 'var(--text-primary)' }}>
               {title}
             </h2>
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
-              aria-label="Fermer"
-            >
-              <X size={18} />
-            </button>
-          </div>
-        )}
+          ) : (
+            <div />
+          )}
+          <button
+            onClick={onClose}
+            className="p-1 rounded"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              cursor: 'pointer',
+              color: 'var(--text-secondary)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+            aria-label="Fermer"
+          >
+            <IconX size={20} />
+          </button>
+        </div>
+        
         {/* Body */}
         <div className="overflow-y-auto p-6 flex-1">{children}</div>
       </div>

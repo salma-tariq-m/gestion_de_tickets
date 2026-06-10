@@ -1,11 +1,17 @@
+import React from 'react';
 import PropTypes from 'prop-types';
 import { cn } from '../../utils/cn';
 
 /**
- * Avatar avec initiales ou image.
- * @param {{ name: string, src?: string, size?: 'xs'|'sm'|'md'|'lg', className?: string }} props
+ * Avatar conforme à la charte graphique TicketFlow (tailles: 40px/28px/20px, rôles colorés)
  */
-export function Avatar({ name = '', src, size = 'md', className }) {
+export function Avatar({
+  name = '',
+  role = 'user', // agent, manager, admin, user, client
+  size = 'md', // lg (40px), md (28px), sm (20px)
+  className,
+  ...rest
+}) {
   const initials = name
     .split(' ')
     .map((n) => n[0])
@@ -13,44 +19,35 @@ export function Avatar({ name = '', src, size = 'md', className }) {
     .toUpperCase()
     .slice(0, 2);
 
-  const sizes = {
-    xs: 'w-6 h-6 text-xs',
-    sm: 'w-8 h-8 text-sm',
-    md: 'w-9 h-9 text-sm',
-    lg: 'w-12 h-12 text-base',
-    xl: 'w-16 h-16 text-lg',
-  };
+  const roleClass = {
+    agent: 'tf-avatar-agent',
+    manager: 'tf-avatar-manager',
+    admin: 'tf-avatar-admin',
+    user: 'tf-avatar-user',
+    client: 'tf-avatar-client',
+  }[role.toLowerCase()] || 'tf-avatar-user';
 
-  const colors = [
-    'bg-indigo-500', 'bg-purple-500', 'bg-blue-500',
-    'bg-emerald-500', 'bg-orange-500', 'bg-pink-500',
-  ];
-  const colorIndex =
-    name.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) % colors.length;
+  const sizeClass = {
+    lg: 'tf-avatar-lg', // 40px
+    md: 'tf-avatar-md', // 28px
+    sm: 'tf-avatar-sm', // 20px
+  }[size] || 'tf-avatar-md';
 
   return (
     <div
-      className={cn(
-        'rounded-full flex items-center justify-center font-semibold text-white shrink-0 overflow-hidden',
-        sizes[size],
-        !src && colors[colorIndex],
-        className
-      )}
-      aria-label={name}
+      className={cn('tf-avatar', roleClass, sizeClass, className)}
+      title={`${name} (${role})`}
+      {...rest}
     >
-      {src ? (
-        <img src={src} alt={name} className="w-full h-full object-cover" />
-      ) : (
-        initials || '?'
-      )}
+      {initials || '?'}
     </div>
   );
 }
 
 Avatar.propTypes = {
   name: PropTypes.string,
-  src: PropTypes.string,
-  size: PropTypes.oneOf(['xs', 'sm', 'md', 'lg', 'xl']),
+  role: PropTypes.string,
+  size: PropTypes.oneOf(['sm', 'md', 'lg']),
   className: PropTypes.string,
 };
 

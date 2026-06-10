@@ -1,27 +1,16 @@
 import { configureStore } from '@reduxjs/toolkit';
-import authReducer from '../features/auth/authSlice';
-import ticketsReducer from '../features/tickets/ticketsSlice';
-import { authApi } from '../features/auth/authApi';
-import { ticketsApi } from '../features/tickets/ticketsApi';
-import { dashboardApi } from '../features/dashboard/dashboardApi';
-import { adminApi } from '../features/admin/adminApi';
+import authReducer from './slices/authSlice';
+import ticketReducer from './slices/ticketSlice';
+import userReducer from './slices/userSlice';
+import notifReducer from './slices/notifSlice';
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
-    tickets: ticketsReducer,
-    [authApi.reducerPath]: authApi.reducer,
-    [ticketsApi.reducerPath]: ticketsApi.reducer,
-    [dashboardApi.reducerPath]: dashboardApi.reducer,
-    [adminApi.reducerPath]: adminApi.reducer,
+    tickets: ticketReducer,
+    users: userReducer,
+    notifications: notifReducer,
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(
-      authApi.middleware,
-      ticketsApi.middleware,
-      dashboardApi.middleware,
-      adminApi.middleware
-    ),
 });
 
 export default store;
