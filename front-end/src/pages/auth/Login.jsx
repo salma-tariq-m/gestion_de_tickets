@@ -181,12 +181,13 @@ export function Login() {
             color: 'var(--text-secondary)'
           }}
         >
-          <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>🔑 Mode Démo (Accès rapide) :</div>
+          
+          {/* <div style={{ fontWeight: 'bold', marginBottom: '4px' }}>🔑 Mode Démo (Accès rapide) :</div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
             <div>Client : <strong>client@ticketflow.com</strong> (mdp: n'importe)</div>
             <div>Agent : <strong>agent@ticketflow.com</strong></div>
             <div>Admin : <strong>admin@ticketflow.com</strong></div>
-          </div>
+          </div> */}
         </div>
 
       </div>

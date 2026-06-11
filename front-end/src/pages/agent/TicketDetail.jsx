@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { IconArrowLeft, IconUserPlus, IconHistory } from '@tabler/icons-react';
+import { IconArrowLeft, IconUserPlus, IconHistory, IconPaperclip } from '@tabler/icons-react';
 import { 
   fetchTicketById, 
   fetchComments, 
@@ -17,7 +17,9 @@ import WorkflowStepper from '../../components/tickets/WorkflowStepper';
 import Button from '../../components/ui/Button';
 import Spinner from '../../components/ui/Spinner';
 import AvatarStack from '../../components/ui/AvatarStack';
+import Avatar from '../../components/ui/Avatar';
 import FormField from '../../components/ui/FormField';
+import Modal from '../../components/ui/Modal';
 import toast from '../../components/ui/Toast';
 import { formatLong } from '../../utils/formatDate';
 
@@ -163,31 +165,24 @@ export function TicketDetail() {
         </div>
       </div>
 
-      {/* Assign Modal (Simplified) */}
-      {showAssignModal && (
-        <div 
-          style={{ 
-            position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', 
-            backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1100,
-            display: 'flex', alignItems: 'center', justifyContent: 'center'
-          }}
-        >
-          <div className="tf-card" style={{ width: '100%', maxWidth: '400px' }}>
-            <h3>Réassigner le ticket</h3>
-            <FormField
-              label="Choisir un agent"
-              type="select"
-              options={users.filter(u => u.role === 'agent' || u.role === 'manager').map(u => ({ value: u.id, label: u.name }))}
-              value={selectedAgent}
-              onChange={(e) => setSelectedAgent(e.target.value)}
-            />
-            <div className="d-flex justify-content-end gap-2 mt-4">
-              <Button variant="ghost" onClick={() => setShowAssignModal(false)}>Annuler</Button>
-              <Button variant="primary" onClick={handleAssign}>Confirmer</Button>
-            </div>
-          </div>
+      {/* Assign Modal */}
+      <Modal 
+        isOpen={showAssignModal} 
+        onClose={() => setShowAssignModal(false)} 
+        title="Réassigner le ticket"
+      >
+        <FormField
+          label="Choisir un agent"
+          type="select"
+          options={users.filter(u => u.role === 'agent' || u.role === 'manager').map(u => ({ value: u.id, label: u.name }))}
+          value={selectedAgent}
+          onChange={(e) => setSelectedAgent(e.target.value)}
+        />
+        <div className="d-flex justify-content-end gap-2 mt-4">
+          <Button variant="ghost" onClick={() => setShowAssignModal(false)}>Annuler</Button>
+          <Button variant="primary" onClick={handleAssign}>Confirmer</Button>
         </div>
-      )}
+      </Modal>
     </div>
   );
 }

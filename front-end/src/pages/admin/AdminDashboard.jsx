@@ -8,30 +8,38 @@ import {
   IconChartLine,
   IconActivity
 } from '@tabler/icons-react';
-import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
   ResponsiveContainer,
   BarChart,
   Bar,
-  Legend
+  Legend,
+  Cell
 } from 'recharts';
 import { fetchTickets } from '../../app/slices/ticketSlice';
 import { fetchUsers } from '../../app/slices/userSlice';
 import MetricCard from '../../components/dashboard/MetricCard';
 
-const data = [
-  { name: 'Lun', tickets: 12, resolus: 10 },
-  { name: 'Mar', tickets: 19, resolus: 15 },
-  { name: 'Mer', tickets: 15, resolus: 18 },
-  { name: 'Jeu', tickets: 22, resolus: 20 },
-  { name: 'Ven', tickets: 30, resolus: 25 },
-  { name: 'Sam', tickets: 10, resolus: 12 },
-  { name: 'Dim', tickets: 8, resolus: 7 },
+const TREND_DATA = [
+  { day: 'Lun', créés: 4, résolus: 3 },
+  { day: 'Mar', créés: 7, résolus: 5 },
+  { day: 'Mer', créés: 5, résolus: 6 },
+  { day: 'Jeu', créés: 8, résolus: 4 },
+  { day: 'Ven', créés: 12, résolus: 9 },
+  { day: 'Sam', créés: 3, résolus: 5 },
+  { day: 'Dim', créés: 2, résolus: 3 },
+];
+
+const PRIORITY_DATA = [
+  { name: 'Critique', value: 3, color: '#E24B4A' },
+  { name: 'Haute', value: 8, color: '#EF9F27' },
+  { name: 'Normale', value: 15, color: '#378ADD' },
+  { name: 'Basse', value: 10, color: '#639922' },
 ];
 
 export function AdminDashboard() {
@@ -56,7 +64,6 @@ export function AdminDashboard() {
         </p>
       </div>
 
-      {/* Métriques globales */}
       <div className="tf-metrics-grid mb-4">
         <MetricCard
           label="Total utilisateurs"
@@ -89,48 +96,77 @@ export function AdminDashboard() {
       </div>
 
       <div className="row g-4">
-        {/* Graphique de volume */}
         <div className="col-12 col-lg-8">
           <div className="tf-card">
-            <div className="d-flex align-items-center gap-2 mb-4">
-              <IconChartLine size={20} color="var(--color-600)" />
-              <h3 className="m-0">Volume d'activité hebdomadaire</h3>
+            <div className="d-flex align-items-center gap-2 mb-3">
+              <IconChartLine size={20} style={{ color: 'var(--color-600)' }} />
+              <h3 className="m-0">Activité hebdomadaire</h3>
             </div>
             <div style={{ width: '100%', height: 300 }}>
               <ResponsiveContainer>
-                <LineChart data={data}>
+                <LineChart data={TREND_DATA}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#E6F1FB" />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#95A5A6' }} />
+                  <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#95A5A6' }} />
                   <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#95A5A6' }} />
-                  <Tooltip 
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+                  <Tooltip
+                    contentStyle={{
+                      fontFamily: 'Helvetica Neue, Arial, sans-serif',
+                      borderRadius: '8px',
+                      border: 'none',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }}
                   />
-                  <Line type="monotone" dataKey="tickets" stroke="#185FA5" strokeWidth={3} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                  <Line type="monotone" dataKey="resolus" stroke="#639922" strokeWidth={3} dot={{ r: 4 }} />
+                  <Legend wrapperStyle={{ fontSize: '12px' }} />
+                  <Line
+                    type="monotone"
+                    dataKey="créés"
+                    stroke="#185FA5"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Tickets Créés"
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="résolus"
+                    stroke="#639922"
+                    strokeWidth={3}
+                    dot={{ r: 4 }}
+                    activeDot={{ r: 6 }}
+                    name="Tickets Résolus"
+                  />
                 </LineChart>
               </ResponsiveContainer>
             </div>
           </div>
         </div>
 
-        {/* Distribution par rôle */}
         <div className="col-12 col-lg-4">
           <div className="tf-card" style={{ height: '100%' }}>
-            <div className="d-flex align-items-center gap-2 mb-4">
-              <IconActivity size={20} color="var(--color-600)" />
-              <h3 className="m-0">Performance Équipes</h3>
+            <div className="d-flex align-items-center gap-2 mb-3">
+              <IconActivity size={20} style={{ color: 'var(--color-600)' }} />
+              <h3 className="m-0">Répartition par Priorité</h3>
             </div>
             <div style={{ width: '100%', height: 300 }}>
               <ResponsiveContainer>
-                <BarChart data={[
-                  { name: 'Support N1', value: 85 },
-                  { name: 'Support N2', value: 72 },
-                  { name: 'Technique', value: 94 },
-                ]} layout="vertical">
-                  <XAxis type="number" hide />
-                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} tick={{ fontSize: 12 }} width={80} />
-                  <Tooltip cursor={{ fill: 'transparent' }} />
-                  <Bar dataKey="value" fill="#378ADD" radius={[0, 4, 4, 0]} barSize={20} />
+                <BarChart data={PRIORITY_DATA} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#E6F1FB" />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#95A5A6' }} />
+                  <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: '#95A5A6' }} />
+                  <Tooltip
+                    contentStyle={{
+                      fontFamily: 'Helvetica Neue, Arial, sans-serif',
+                      borderRadius: '8px',
+                      border: 'none',
+                      boxShadow: '0 4px 12px rgba(0,0,0,0.1)'
+                    }}
+                    cursor={{ fill: '#EEF3F9', opacity: 0.5 }}
+                  />
+                  <Bar dataKey="value" name="Nombre de tickets" radius={[4, 4, 0, 0]}>
+                    {PRIORITY_DATA.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Bar>
                 </BarChart>
               </ResponsiveContainer>
             </div>
